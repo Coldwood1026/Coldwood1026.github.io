@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>11408考研规划 · 自定义考试时间 + 液态玻璃</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #1a1c26, #050608);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        /* 背景图层 */
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+        .bg-layer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .bg-layer img.loaded { opacity: 1; }
+        .bg-layer::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 30%, #1a1c26, #050608);
+            z-index: -1;
+        }
+
+        /* 液态玻璃核心样式 */
+        .liquidGlass-wrapper {
+            position: relative;
+            display: flex;
+            font-weight: 600;
+            overflow: hidden;
+            cursor: default;
+            box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+        }
+        .liquidGlass-effect {
+            position: absolute;
+            z-index: 0;
+            inset: 0;
+            backdrop-filter: blur(3px);
+            filter: url(#glass-distortion-extreme);
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .liquidGlass-tint {
+            z-index: 1;
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .liquidGlass-shine {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            overflow: hidden;
+            box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.5),
+                        inset -1px -1px 1px 1px rgba(255, 255, 255, 0.5);
+        }
+        .liquidGlass-text {
+            z-index: 3;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            color: white;
+        }
+
+        /* 卡片圆角 */
+        .glass-card { border-radius: 1.8rem; padding: 0; }
+        .glass-card .liquidGlass-text { padding: 1.5rem; }
+        .todo-main-wrapper { border-radius: 2rem; }
+
+        /* 倒计时与日期自定义区域 */
+        .countdown-box {
+            text-align: center;
+        }
+        .days-number {
+            font-size: 3.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFFFFF, #9adc4a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .countdown-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .date-picker-area {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .date-input-group {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            padding: 0.3rem 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 0.5px solid rgba(255,255,255,0.2);
+        }
+        .date-input-group label {
+            font-size: 0.7rem;
+            color: #ccc;
+        }
+        .date-input-group input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.8rem;
+            font-family: monospace;
+            outline: none;
+            cursor: pointer;
+        }
+        .reset-date-btn {
+            background: rgba(154, 220, 74, 0.2);
+            border: 0.5px solid #9adc4a;
+            border-radius: 30px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.65rem;
+            color: #9adc4a;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .reset-date-btn:hover {
+            background: #9adc4a;
+            color: #000;
+        }
+
+        /* 上传组件 */
+        .upload-area {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+            justify-content: center;
+        }
+        .upload-label, .reset-bg-btn {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            padding: 0.3rem 1rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border: 0.5px solid rgba(255,255,255,0.2);
+        }
+        .upload-label:hover, .reset-bg-btn:hover { background: #9adc4a; color: #000; }
+
+        /* 圆环 */
+        .nested-ring-container { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+        canvas#activityRings { width: 200px; height: 200px; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3)); }
+        .ring-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+        .legend-item { background: rgba(0,0,0,0.4); backdrop-filter: blur(12px); padding: 0.2rem 0.8rem; border-radius: 40px; font-size: 0.7rem; display: flex; align-items: center; gap: 8px; }
+        .legend-color { width: 14px; height: 14px; border-radius: 4px; }
+        .progress-note { font-size: 0.7rem; text-align: center; color: rgba(255,255,255,0.7); margin-top: 0.75rem; border-top: 0.5px solid rgba(255,255,255,0.2); padding-top: 0.75rem; }
+
+        /* AI 区域 */
+        .api-input-group { background: rgba(12,16,22,0.6); backdrop-filter: blur(12px); border-radius: 44px; padding: 0.5rem 1.2rem; display: flex; gap: 10px; margin-bottom: 1rem; border: 0.5px solid rgba(116,179,38,0.3); }
+        .api-input-group input { background: transparent; border: none; flex: 1; color: white; font-size: 0.8rem; outline: none; }
+        textarea { width: 100%; background: rgba(12,16,22,0.6); backdrop-filter: blur(8px); border: 0.5px solid rgba(255,255,255,0.15); border-radius: 24px; padding: 12px; color: white; font-family: 'Inter', monospace; font-size: 0.85rem; resize: vertical; outline: none; }
+        .ai-buttons { display: flex; gap: 12px; margin-top: 1rem; flex-wrap: wrap; }
+        .ai-btn { background: rgba(36,42,52,0.7); backdrop-filter: blur(12px); border: 0.5px solid rgba(255,255,255,0.15); padding: 8px 18px; border-radius: 44px; font-size: 0.75rem; color: #eff3f8; cursor: pointer; transition: 0.2s; }
+        .ai-btn.primary { background: #9adc4a; color: #0a0c12; border: none; }
+        .ai-btn:hover { transform: scale(0.96); }
+        .ai-response { margin-top: 1rem; background: rgba(10,14,20,0.7); backdrop-filter: blur(24px); border-radius: 24px; padding: 0.9rem; border: 0.5px solid rgba(116,179,38,0.3); font-size: 0.8rem; max-height: 200px; overflow-y: auto; }
+        .response-header { display: flex; justify-content: space-between; margin-bottom: 8px; color: #9adc4a; font-size: 0.7rem; }
+        .add-suggestions-btn { background: rgba(154,220,74,0.2); border: 0.5px solid #9adc4a; border-radius: 40px; color: #bef264; padding: 4px 12px; cursor: pointer; }
+
+        /* 科目筛选 */
+        .subject-filter-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1rem; }
+        .filter-chip { background: rgba(25,30,40,0.6); backdrop-filter: blur(8px); border: 0.5px solid rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 40px; font-size: 0.75rem; color: #e0e7ff; cursor: pointer; }
+        .filter-chip.active { background: #9adc4a; color: #000; }
+
+        /* 待办与进度管理 Tab */
+        .tab-bar {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 0.5px solid rgba(255,255,255,0.2);
+            padding-bottom: 0.5rem;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #ccc;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 2rem;
+        }
+        .tab-btn.active {
+            color: #9adc4a;
+            background: rgba(154, 220, 74, 0.15);
+        }
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.05);
+        }
+        .tab-pane { display: none; }
+        .tab-pane.active-pane { display: block; }
+
+        /* 添加任务区域 */
+        .add-task-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 2rem;
+            background: rgba(12,16,22,0.5);
+            backdrop-filter: blur(16px);
+            padding: 0.8rem 1rem;
+            border-radius: 60px;
+            border: 0.5px solid rgba(255,255,255,0.1);
+            justify-content: center;
+            align-items: center;
+        }
+        .add-task-area input {
+            flex: 2;
+            min-width: 160px;
+            background: rgba(0,0,0,0.3);
+            border: 0.5px solid rgba(255,255,255,0.15);
+            padding: 12px 20px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            color: white;
+            outline: none;
+        }
+        .add-task-area select {
+            background: rgba(0,0,0,0.3);
+            border: 0.5px solid rgba(255,255,255,0.15);
+            padding: 12px 20px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            color: white;
+            outline: none;
+            cursor: pointer;
+        }
+        .add-btn {
+            background: #9adc4a;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0a0e14;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* 任务列表样式 */
+        .tasks-list, .completed-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 55vh;
+            overflow-y: auto;
+        }
+        .task-item, .completed-item {
+            background: rgba(22,26,34,0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 0.9rem 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 0.5px solid rgba(255,255,255,0.1);
+        }
+        .task-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+        .task-check {
+            width: 22px;
+            height: 22px;
+            accent-color: #9adc4a;
+            cursor: pointer;
+        }
+        .task-text, .completed-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .completed-text {
+            color: #9aaebf;
+            text-decoration: line-through;
+        }
+        .subject-badge {
+            background: rgba(0,0,0,0.5);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+        }
+        .delete-btn, .restore-btn {
+            background: rgba(255,80,80,0.15);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 40px;
+            color: #ffabab;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .restore-btn {
+            background: rgba(154, 220, 74, 0.2);
+            color: #9adc4a;
+        }
+        .empty-msg {
+            text-align: center;
+            padding: 3rem;
+            color: #aab5cc;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .sec-btn {
+            background: rgba(30,36,44,0.7);
+            backdrop-filter: blur(8px);
+            border: 0.5px solid rgba(255,255,255,0.1);
+            padding: 8px 20px;
+            border-radius: 44px;
+            color: #f0f0f0;
+            cursor: pointer;
+        }
+        .dashboard {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .left-panel {
+            flex: 1;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .right-panel {
+            flex: 2;
+            min-width: 400px;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #9adc4a;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 900px) {
+            body { padding: 1rem; }
+            .dashboard { flex-direction: column; }
+            .left-panel, .right-panel { width: 100%; }
+            .add-task-area input { flex: 1; min-width: 120px; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<div class="bg-layer" id="bgLayer">
+    <img id="userBgImg" alt="background">
+</div>
+
+<svg style="position: absolute; width: 0; height: 0; pointer-events: none;">
+    <defs>
+        <filter id="glass-distortion-extreme" x="-50%" y="-50%" width="200%" height="200%" filterUnits="userSpaceOnUse">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04 0.04" numOctaves="3" seed="42" result="noise1" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.015 0.015" numOctaves="2" seed="17" result="noise2" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.003 0.003" numOctaves="1" seed="89" result="noise3" />
+            <feComposite in="noise1" in2="noise2" operator="arithmetic" k1="0.5" k2="0.5" k3="0" k4="0" result="mixed1" />
+            <feComposite in="mixed1" in2="noise3" operator="arithmetic" k1="0.6" k2="0.4" k3="0" k4="0" result="mixedNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="mixedNoise" scale="800" xChannelSelector="R" yChannelSelector="G" result="displaced1" />
+            <feDisplacementMap in="displaced1" in2="noise2" scale="400" xChannelSelector="R" yChannelSelector="G" result="displaced2" />
+            <feDisplacementMap in="displaced2" in2="noise3" scale="150" xChannelSelector="R" yChannelSelector="G" result="displaced3" />
+            <feSpecularLighting in="mixedNoise" surfaceScale="12" specularConstant="1.5" specularExponent="150" lighting-color="#ffffff" result="specLight">
+                <fePointLight x="-500" y="-500" z="500" />
+            </feSpecularLighting>
+            <feComposite in="specLight" in2="displaced3" operator="arithmetic" k1="0" k2="1" k3="1.2" k4="0" />
+        </filter>
+    </defs>
+</svg>
+
+<div class="dashboard">
+    <div class="left-panel">
+        <!-- 倒计时卡片（含自定义考试时间） -->
+        <div class="liquidGlass-wrapper glass-card">
+            <div class="liquidGlass-effect"></div>
+            <div class="liquidGlass-tint"></div>
+            <div class="liquidGlass-shine"></div>
+            <div class="liquidGlass-text" style="text-align: center;">
+                <i class="fas fa-hourglass-half" style="font-size: 2rem; color: #9adc4a;"></i>
+                <div class="days-number" id="countdownDays">--</div>
+                <div class="countdown-label" id="countdownLabel">距离考研初试</div>
+                <div class="date-picker-area">
+                    <div class="date-input-group">
+                        <label><i class="fas fa-calendar-alt"></i> 考试日期：</label>
+                        <input type="date" id="examDatePicker">
+                    </div>
+                    <button id="resetExamDateBtn" class="reset-date-btn"><i class="fas fa-undo-alt"></i> 重置为默认日期</button>
+                </div>
+                <div class="upload-area">
+                    <label class="upload-label" id="uploadLabel"><i class="fas fa-image"></i> 上传背景</label>
+                    <input type="file" id="bgUpload" accept="image/*" style="display: none;">
+                    <span class="reset-bg-btn" id="resetBgBtn"><i class="fas fa-undo-alt"></i> 重置</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 圆环进度卡片 -->
+        <div class="liquidGlass-wrapper glass-card">
+            <div class="liquidGlass-effect"></div>
+            <div class="liquidGlass-tint"></div>
+            <div class="liquidGlass-shine"></div>
+            <div class="liquidGlass-text">
+                <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-simple"></i> 各科完成圆环</h4>
+                <div class="nested-ring-container">
+                    <canvas id="activityRings" width="200" height="200"></canvas>
+                    <div class="ring-legend" id="ringLegend"></div>
+                </div>
+                <div class="progress-note"><i class="fas fa-rotate-right"></i> 勾选任务 · 圆环实时更新</div>
+            </div>
+        </div>
+
+        <!-- DeepSeek AI 规划师卡片 -->
+        <div class="liquidGlass-wrapper glass-card">
+            <div class="liquidGlass-effect"></div>
+            <div class="liquidGlass-tint"></div>
+            <div class="liquidGlass-shine"></div>
+            <div class="liquidGlass-text">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                    <i class="fas fa-robot"></i> <span style="font-weight: 600;">DeepSeek 考研规划师</span>
+                </div>
+                <div class="api-input-group"><i class="fas fa-key"></i><input type="password" id="deepseekApiKey" placeholder="DeepSeek API Key (sk-...)"></div>
+                <textarea id="aiPrompt" rows="2" placeholder="例如：安排本周数学+408详细计划..."></textarea>
+                <div class="ai-buttons">
+                    <button id="generatePlanBtn" class="ai-btn primary"><i class="fas fa-magic"></i> 生成计划</button>
+                    <button id="quickDailyPlan" class="ai-btn"><i class="far fa-calendar-alt"></i> 今日待办</button>
+                    <button id="quick408Plan" class="ai-btn"><i class="fas fa-database"></i> 408冲刺</button>
+                </div>
+                <div id="aiResponseArea" class="ai-response" style="display: none;">
+                    <div class="response-header"><span><i class="fas fa-comment-dots"></i> AI 建议</span><button id="addAllAiTasks" class="add-suggestions-btn">+ 添加至待办</button></div>
+                    <div id="aiResponseText"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 科目筛选卡片 -->
+        <div class="liquidGlass-wrapper glass-card">
+            <div class="liquidGlass-effect"></div>
+            <div class="liquidGlass-tint"></div>
+            <div class="liquidGlass-shine"></div>
+            <div class="liquidGlass-text">
+                <h4><i class="fas fa-filter"></i> 科目筛选</h4>
+                <div class="subject-filter-buttons" id="filterContainer">
+                    <button class="filter-chip active" data-filter="all">📚 全部</button>
+                    <button class="filter-chip" data-filter="政治">📖 政治</button>
+                    <button class="filter-chip" data-filter="英语">🇬🇧 英语</button>
+                    <button class="filter-chip" data-filter="数学">📐 数学</button>
+                    <button class="filter-chip" data-filter="408">💻 408</button>
+                    <button class="filter-chip" data-filter="其他">⭐ 其他</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div class="liquidGlass-wrapper todo-main-wrapper">
+            <div class="liquidGlass-effect"></div>
+            <div class="liquidGlass-tint"></div>
+            <div class="liquidGlass-shine"></div>
+            <div class="liquidGlass-text">
+                <div style="padding: 1.8rem 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                        <div style="font-size: 1.8rem; font-weight: 600;"><i class="fas fa-list-check"></i> 任务管理</div>
+                        <div><button class="sec-btn" id="clearCompletedBtn"><i class="fas fa-eraser"></i> 清空已完成</button></div>
+                    </div>
+
+                    <!-- Tab 切换栏 -->
+                    <div class="tab-bar">
+                        <button class="tab-btn active" data-tab="todo">📋 待办清单</button>
+                        <button class="tab-btn" data-tab="progress">📊 进度管理 (已完成)</button>
+                    </div>
+
+                    <!-- 待办清单面板 -->
+                    <div id="todoPane" class="tab-pane active-pane">
+                        <div class="add-task-area">
+                            <input type="text" id="taskInput" placeholder="新任务..." autocomplete="off">
+                            <select id="subjectSelect">
+                                <option value="数学">📐 数学</option>
+                                <option value="408">💻 408</option>
+                                <option value="英语">🇬🇧 英语</option>
+                                <option value="政治">📖 政治</option>
+                                <option value="其他">⭐ 其他</option>
+                            </select>
+                            <button class="add-btn" id="addTaskBtn"><i class="fas fa-plus-circle"></i> 添加</button>
+                        </div>
+                        <div class="tasks-list" id="tasksListContainer"></div>
+                    </div>
+
+                    <!-- 进度管理面板 (已完成任务) -->
+                    <div id="progressPane" class="tab-pane">
+                        <div class="completed-list" id="completedListContainer"></div>
+                    </div>
+
+                    <div style="margin-top: 1rem; font-size: 0.7rem; text-align: right; color: rgba(255,255,255,0.6);"><i class="fas fa-database"></i> 本地存储 · 圆环自动跟随</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ================= 考试时间自定义功能 =================
+    const EXAM_DATE_STORAGE_KEY = 'customExamDate';
+    let examDateObj = null;   // 存储用户选择的日期（Date 对象，精确到当天 00:00:00）
+    
+    // 获取默认考试日期（当年12月第三个周六附近，取 12月20日作为标准默认值）
+    function getDefaultExamDate() {
+        const now = new Date();
+        let year = now.getFullYear();
+        let defaultDate = new Date(year, 11, 20); // 12月20日
+        if (now > defaultDate) {
+            defaultDate = new Date(year + 1, 11, 20);
+        }
+        return defaultDate;
+    }
+    
+    // 加载保存的考试日期
+    function loadExamDate() {
+        const stored = localStorage.getItem(EXAM_DATE_STORAGE_KEY);
+        if (stored) {
+            const parsed = new Date(stored);
+            if (!isNaN(parsed.getTime())) {
+                examDateObj = parsed;
+                return;
+            }
+        }
+        examDateObj = getDefaultExamDate();
+    }
+    
+    // 保存考试日期到 localStorage
+    function saveExamDate(date) {
+        localStorage.setItem(EXAM_DATE_STORAGE_KEY, date.toISOString().split('T')[0]);
+    }
+    
+    // 更新日期选择器的显示值
+    function updateDatePickerValue() {
+        const picker = document.getElementById('examDatePicker');
+        if (picker && examDateObj) {
+            const year = examDateObj.getFullYear();
+            const month = String(examDateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(examDateObj.getDate()).padStart(2, '0');
+            picker.value = `${year}-${month}-${day}`;
+        }
+    }
+    
+    // 倒计时更新函数
+    function updateCountdown() {
+        if (!examDateObj) return;
+        const now = new Date();
+        // 清除时间部分，只比较日期
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const examDay = new Date(examDateObj.getFullYear(), examDateObj.getMonth(), examDateObj.getDate());
+        const diffTime = examDay - today;
+        const daysRemaining = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+        const daysSpan = document.getElementById('countdownDays');
+        if (daysSpan) daysSpan.innerText = daysRemaining;
+        // 可选的标签提示
+        const labelSpan = document.getElementById('countdownLabel');
+        if (labelSpan) labelSpan.innerText = `距离 ${examDay.getFullYear()}年${examDay.getMonth()+1}月${examDay.getDate()}日 考研`;
+    }
+    
+    // 设置新的考试日期 (由用户选择)
+    function setExamDate(newDate) {
+        examDateObj = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate());
+        saveExamDate(examDateObj);
+        updateDatePickerValue();
+        updateCountdown();
+    }
+    
+    // 重置为默认日期
+    function resetExamDate() {
+        examDateObj = getDefaultExamDate();
+        saveExamDate(examDateObj);
+        updateDatePickerValue();
+        updateCountdown();
+    }
+    
+    // 监听日期选择器变化
+    function initDatePicker() {
+        const picker = document.getElementById('examDatePicker');
+        if (!picker) return;
+        picker.addEventListener('change', (e) => {
+            const selected = new Date(e.target.value);
+            if (!isNaN(selected.getTime())) {
+                setExamDate(selected);
+            }
+        });
+        const resetBtn = document.getElementById('resetExamDateBtn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', resetExamDate);
+        }
+    }
+    
+    // ================= 倒计时定时器 =================
+    loadExamDate();
+    updateCountdown();
+    setInterval(updateCountdown, 1000 * 60 * 60); // 每小时更新一次，足够精确
+    initDatePicker();
+    updateDatePickerValue();
+
+    // ================= 任务管理 (无默认任务) =================
+    const STORAGE_KEY = '11408_liquid_tasks';
+    let tasks = [];
+    let currentFilter = 'all';
+
+    function saveTasks() { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }
+    function loadTasks() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            tasks = JSON.parse(stored);
+        } else {
+            tasks = [];
+            saveTasks();
+        }
+    }
+
+    function addTaskRaw(text, subject, completed = false) {
+        if (!text.trim()) return false;
+        tasks.push({ id: Date.now() + '-' + Math.random().toString(36), text: text.trim(), subject, completed });
+        saveTasks();
+        renderAll();
+        return true;
+    }
+
+    function deleteTask(id) {
+        tasks = tasks.filter(t => t.id != id);
+        saveTasks();
+        renderAll();
+    }
+
+    function toggleComplete(id) {
+        const task = tasks.find(t => t.id == id);
+        if (task) {
+            task.completed = !task.completed;
+            saveTasks();
+            renderAll();
+        }
+    }
+
+    function clearCompleted() {
+        tasks = tasks.filter(t => !t.completed);
+        saveTasks();
+        renderAll();
+    }
+
+    function getCompletedTasks() {
+        return tasks.filter(t => t.completed);
+    }
+
+    function getActiveTasks() {
+        return tasks.filter(t => !t.completed);
+    }
+
+    function getSubjectStats() {
+        const subs = ['政治', '英语', '数学', '408', '其他'];
+        const stats = {};
+        for (let s of subs) {
+            const subTasks = tasks.filter(t => t.subject === s);
+            const total = subTasks.length;
+            const completed = subTasks.filter(t => t.completed).length;
+            stats[s] = { total, completed, percent: total === 0 ? 0 : Math.round((completed / total) * 100) };
+        }
+        return stats;
+    }
+
+    const order = ['政治', '英语', '数学', '408', '其他'];
+    const colors = { '政治': '#FF4D4D', '英语': '#4CAF50', '数学': '#2196F3', '408': '#FF9800', '其他': '#AA00FF' };
+    const radii = [84, 72, 60, 48, 36];
+    const lineWidth = 10;
+
+    function drawNestedRings() {
+        const canvas = document.getElementById('activityRings');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.height = 200;
+        const cx = 100, cy = 100;
+        ctx.clearRect(0, 0, 200, 200);
+        const stats = getSubjectStats();
+        for (let i = 0; i < order.length; i++) {
+            const sub = order[i];
+            const rad = radii[i];
+            const pct = stats[sub].percent;
+            ctx.beginPath();
+            ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(80, 90, 110, 0.6)';
+            ctx.lineWidth = lineWidth;
+            ctx.stroke();
+            if (pct > 0) {
+                const start = -Math.PI / 2;
+                const end = start + (pct / 100) * Math.PI * 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, rad, start, end);
+                ctx.strokeStyle = colors[sub];
+                ctx.lineWidth = lineWidth;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+        }
+        const total = tasks.length;
+        const completedCount = tasks.filter(t => t.completed).length;
+        const totalPct = total === 0 ? 0 : Math.round((completedCount / total) * 100);
+        ctx.font = 'bold 20px "Inter"';
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${totalPct}%`, cx, cy);
+        ctx.font = '10px "Inter"';
+        ctx.fillStyle = '#9adc4a';
+        ctx.fillText('总进度', cx, cy + 20);
+        
+        const legendDiv = document.getElementById('ringLegend');
+        if (legendDiv) {
+            legendDiv.innerHTML = order.map(sub => `<div class="legend-item"><div class="legend-color" style="background:${colors[sub]}"></div><span class="legend-text">${sub}</span><span class="legend-percent">${stats[sub].percent}%</span></div>`).join('');
+        }
+    }
+
+    function renderTodoList() {
+        let filtered = currentFilter === 'all' ? getActiveTasks() : getActiveTasks().filter(t => t.subject === currentFilter);
+        const container = document.getElementById('tasksListContainer');
+        if (!filtered.length) {
+            container.innerHTML = '<div class="empty-msg"><i class="fas fa-check-circle"></i> 暂无待办任务，添加或AI规划吧 ✨</div>';
+            return;
+        }
+        let html = '';
+        filtered.forEach(task => {
+            const cls = { '政治':'subject-政治','英语':'subject-英语','数学':'subject-数学','408':'subject-408' }[task.subject] || 'subject-其他';
+            html += `<div class="task-item" data-id="${task.id}">
+                        <div class="task-left">
+                            <input type="checkbox" class="task-check" data-id="${task.id}">
+                            <span class="task-text">${escapeHtml(task.text)}</span>
+                            <span class="subject-badge ${cls}">${task.subject}</span>
+                        </div>
+                        <button class="delete-btn" data-id="${task.id}"><i class="fas fa-trash-alt"></i> 删除</button>
+                    </div>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll('#tasksListContainer .task-check').forEach(cb => {
+            cb.addEventListener('change', (e) => toggleComplete(cb.getAttribute('data-id')));
+        });
+        document.querySelectorAll('#tasksListContainer .delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => deleteTask(btn.getAttribute('data-id')));
+        });
+    }
+
+    function renderCompletedList() {
+        const completedTasks = getCompletedTasks();
+        const container = document.getElementById('completedListContainer');
+        if (!completedTasks.length) {
+            container.innerHTML = '<div class="empty-msg"><i class="fas fa-history"></i> 暂无已完成任务，完成任务后会显示在这里</div>';
+            return;
+        }
+        let html = '';
+        completedTasks.forEach(task => {
+            html += `<div class="completed-item" data-id="${task.id}">
+                        <div class="task-left">
+                            <span class="completed-text">${escapeHtml(task.text)}</span>
+                            <span class="subject-badge">${task.subject}</span>
+                        </div>
+                        <button class="restore-btn" data-id="${task.id}"><i class="fas fa-undo-alt"></i> 恢复</button>
+                    </div>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll('#completedListContainer .restore-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = btn.getAttribute('data-id');
+                const task = tasks.find(t => t.id == id);
+                if (task) {
+                    task.completed = false;
+                    saveTasks();
+                    renderAll();
+                }
+            });
+        });
+    }
+
+    function renderAll() {
+        renderTodoList();
+        renderCompletedList();
+        drawNestedRings();
+        updateFilterActive();
+    }
+
+    function updateFilterActive() {
+        document.querySelectorAll('.filter-chip').forEach(btn => {
+            if (btn.getAttribute('data-filter') === currentFilter) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, m => { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]; });
+    }
+
+    // Tab 切换
+    function initTabs() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const todoPane = document.getElementById('todoPane');
+        const progressPane = document.getElementById('progressPane');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.getAttribute('data-tab');
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                if (target === 'todo') {
+                    todoPane.classList.add('active-pane');
+                    progressPane.classList.remove('active-pane');
+                    renderTodoList();
+                } else {
+                    todoPane.classList.remove('active-pane');
+                    progressPane.classList.add('active-pane');
+                    renderCompletedList();
+                }
+            });
+        });
+    }
+
+    // ================= 背景图片上传 =================
+    const bgImg = document.getElementById('userBgImg');
+    const uploadInput = document.getElementById('bgUpload');
+    const resetBgBtn = document.getElementById('resetBgBtn');
+    const uploadLabel = document.getElementById('uploadLabel');
+    const BG_STORAGE = 'customBgDataURL';
+    uploadLabel.addEventListener('click', () => uploadInput.click());
+    uploadInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const dataURL = ev.target.result;
+                bgImg.src = dataURL;
+                bgImg.classList.add('loaded');
+                localStorage.setItem(BG_STORAGE, dataURL);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    resetBgBtn.addEventListener('click', () => {
+        bgImg.src = '';
+        bgImg.classList.remove('loaded');
+        localStorage.removeItem(BG_STORAGE);
+    });
+    const savedBg = localStorage.getItem(BG_STORAGE);
+    if (savedBg) {
+        bgImg.src = savedBg;
+        bgImg.classList.add('loaded');
+    }
+
+    // ================= DeepSeek AI (读取已完成任务) =================
+    let lastAiTasks = [];
+    async function callDeepSeek(prompt, key, completedContext) {
+        const systemMsg = `你是考研规划专家，严格格式：【科目】任务内容，科目必须是数学/408/英语/政治/其他。不要多余解释。
+用户已经完成了以下任务：${completedContext}。请根据用户的完成进度，制定后续合理的学习计划，不要重复已经完成的内容。`;
+        const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    { role: 'system', content: systemMsg },
+                    { role: 'user', content: prompt }
+                ],
+                temperature: 0.7,
+                max_tokens: 800
+            })
+        });
+        if (!res.ok) throw new Error(`API错误 ${res.status}`);
+        const data = await res.json();
+        return data.choices[0].message.content;
+    }
+
+    function parseTasksFromAI(text) {
+        const lines = text.split(/\r?\n/);
+        const out = [];
+        for (let line of lines) {
+            line = line.trim();
+            if (!line) continue;
+            const match = line.match(/^【(数学|408|英语|政治|其他)】(.*)$/);
+            if (match) {
+                out.push({ text: match[2].trim(), subject: match[1] });
+            } else if (line.includes('【') && line.includes('】')) {
+                const subjMatch = line.match(/【(.{1,4})】/);
+                if (subjMatch) {
+                    let subj = { '数学': '数学', '408': '408', '英语': '英语', '政治': '政治', '其他': '其他' }[subjMatch[1]] || '其他';
+                    let content = line.replace(/【.*?】/, '').trim();
+                    if (content) out.push({ text: content, subject: subj });
+                } else out.push({ text: line, subject: '其他' });
+            } else if (line.length > 0) out.push({ text: line, subject: '其他' });
+        }
+        return out;
+    }
+
+    async function generatePlanWithAI(promptText) {
+        const key = document.getElementById('deepseekApiKey').value.trim();
+        if (!key) { alert('请填入 DeepSeek API Key (platform.deepseek.com)'); return; }
+        const completedTasks = getCompletedTasks();
+        let completedContext = "无";
+        if (completedTasks.length > 0) {
+            completedContext = completedTasks.map(t => `【${t.subject}】${t.text}`).join("；");
+        }
+        const respDiv = document.getElementById('aiResponseArea'), respText = document.getElementById('aiResponseText'), addBtn = document.getElementById('addAllAiTasks');
+        respDiv.style.display = 'block';
+        respText.innerHTML = '<span class="loading-spinner"></span> AI 正在根据你的完成进度生成计划...';
+        addBtn.style.display = 'none';
+        try {
+            const aiOut = await callDeepSeek(promptText, key, completedContext);
+            respText.innerText = aiOut;
+            const parsed = parseTasksFromAI(aiOut);
+            lastAiTasks = parsed;
+            if (parsed.length) {
+                addBtn.style.display = 'inline-block';
+                addBtn.onclick = () => {
+                    let added = 0;
+                    for (let t of parsed) {
+                        if (addTaskRaw(t.text, t.subject)) added++;
+                    }
+                    alert(`✅ 已添加 ${added} 个AI任务到待办清单`);
+                    addBtn.style.display = 'none';
+                };
+            } else {
+                respText.innerHTML += '\n⚠️ 未识别标准格式，可手动添加。';
+            }
+        } catch (e) {
+            console.error(e);
+            respText.innerHTML = `❌ 错误: ${e.message}`;
+        }
+    }
+
+    // 事件绑定
+    document.getElementById('generatePlanBtn').addEventListener('click', () => {
+        const p = document.getElementById('aiPrompt').value.trim();
+        if (p) generatePlanWithAI(p);
+        else alert('请输入规划需求');
+    });
+    document.getElementById('quickDailyPlan').addEventListener('click', () => generatePlanWithAI('为我生成今天考研待办：数学+408，共4-6个，使用【科目】格式'));
+    document.getElementById('quick408Plan').addEventListener('click', () => generatePlanWithAI('制定408专业课冲刺计划（数据结构、计组、操作系统、计网），输出5个核心任务，用【408】开头。'));
+    document.getElementById('addTaskBtn').addEventListener('click', () => {
+        const inp = document.getElementById('taskInput');
+        const subj = document.getElementById('subjectSelect').value;
+        if (inp.value.trim()) {
+            addTaskRaw(inp.value, subj);
+            inp.value = '';
+        }
+    });
+    document.getElementById('clearCompletedBtn').addEventListener('click', clearCompleted);
+
+    function setupFilters() {
+        document.querySelectorAll('.filter-chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentFilter = btn.getAttribute('data-filter');
+                renderTodoList();
+                updateFilterActive();
+            });
+        });
+    }
+
+    // 初始化所有模块
+    loadTasks();
+    renderAll();
+    setupFilters();
+    initTabs();
+    const savedKey = localStorage.getItem('deepseek_key');
+    if (savedKey) document.getElementById('deepseekApiKey').value = savedKey;
+    document.getElementById('deepseekApiKey').addEventListener('change', (e) => {
+        localStorage.setItem('deepseek_key', e.target.value);
+    });
+    drawNestedRings();
+</script>
+</body>
+</html>
