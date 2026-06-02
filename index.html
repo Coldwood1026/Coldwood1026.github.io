@@ -198,48 +198,37 @@
         .filter-chip { background: rgba(25,30,40,0.6); backdrop-filter: blur(8px); border: 0.5px solid rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 40px; font-size: 0.75rem; color: #e0e7ff; cursor: pointer; }
         .filter-chip.active { background: #9adc4a; color: #000; }
 
-        /* 待办与进度管理 Tab - 修正对齐版 */
-        .tasks-header {
-            margin-bottom: 1rem;
-        }
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        .title-area {
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
+        /* ========= 待办与进度管理 Tab (修正居中对齐) ========= */
         .tab-bar {
             display: flex;
-            gap: 0.8rem;
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.2);
+            justify-content: center;  /* 关键：水平居中 */
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 0.5px solid rgba(255,255,255,0.2);
             padding-bottom: 0.5rem;
-            margin-top: 0;
-            width: 100%;
+            flex-wrap: wrap;
         }
         .tab-btn {
-            background: transparent;
-            border: none;
-            padding: 0.5rem 1rem;
+            background: rgba(25,30,40,0.5);
+            backdrop-filter: blur(8px);
+            border: 0.5px solid rgba(255,255,255,0.1);
+            padding: 0.6rem 1.5rem;
             font-size: 0.9rem;
             font-weight: 500;
-            color: #ccc;
+            color: #e0e7ff;
             cursor: pointer;
             transition: 0.2s;
             border-radius: 2rem;
+            min-width: 130px;
         }
         .tab-btn.active {
-            color: #9adc4a;
-            background: rgba(154, 220, 74, 0.15);
+            background: #9adc4a;
+            color: #000;
+            border-color: transparent;
         }
-        .tab-btn:hover {
-            color: white;
-            background: rgba(255,255,255,0.05);
+        .tab-btn:hover:not(.active) {
+            background: rgba(154, 220, 74, 0.3);
+            color: #fff;
         }
         .tab-pane { display: none; }
         .tab-pane.active-pane { display: block; }
@@ -392,11 +381,6 @@
             flex: 2;
             min-width: 400px;
         }
-        .right-panel .liquidGlass-text > div {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
         .loading-spinner {
             display: inline-block;
             width: 14px;
@@ -412,6 +396,7 @@
             .dashboard { flex-direction: column; }
             .left-panel, .right-panel { width: 100%; }
             .add-task-area input { flex: 1; min-width: 120px; }
+            .tab-btn { min-width: 100px; padding: 0.4rem 1rem; }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -531,18 +516,16 @@
             <div class="liquidGlass-tint"></div>
             <div class="liquidGlass-shine"></div>
             <div class="liquidGlass-text">
-                <div style="padding: 1.8rem 2rem; display: flex; flex-direction: column; height: 100%;">
-                    <!-- 头部 + Tab 栏合并区域（修正对齐） -->
-                    <div class="tasks-header">
-                        <div class="header-row">
-                            <div class="title-area"><i class="fas fa-list-check"></i> 任务管理</div>
-                            <div><button class="sec-btn" id="clearCompletedBtn"><i class="fas fa-eraser"></i> 清空已完成</button></div>
-                        </div>
-                        <!-- Tab 切换栏 -->
-                        <div class="tab-bar">
-                            <button class="tab-btn active" data-tab="todo">📋 待办清单</button>
-                            <button class="tab-btn" data-tab="progress">📊 进度管理 (已完成)</button>
-                        </div>
+                <div style="padding: 1.8rem 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                        <div style="font-size: 1.8rem; font-weight: 600;"><i class="fas fa-list-check"></i> 任务管理</div>
+                        <div><button class="sec-btn" id="clearCompletedBtn"><i class="fas fa-eraser"></i> 清空已完成</button></div>
+                    </div>
+
+                    <!-- Tab 切换栏 - 现已居中对齐 -->
+                    <div class="tab-bar">
+                        <button class="tab-btn active" data-tab="todo">📋 待办清单</button>
+                        <button class="tab-btn" data-tab="progress">📊 进度管理 (已完成)</button>
                     </div>
 
                     <!-- 待办清单面板 -->
@@ -643,13 +626,14 @@
     
     function initDatePicker() {
         const picker = document.getElementById('examDatePicker');
-        if (!picker) return;
-        picker.addEventListener('change', (e) => {
-            const selected = new Date(e.target.value);
-            if (!isNaN(selected.getTime())) {
-                setExamDate(selected);
-            }
-        });
+        if (picker) {
+            picker.addEventListener('change', (e) => {
+                const selected = new Date(e.target.value);
+                if (!isNaN(selected.getTime())) {
+                    setExamDate(selected);
+                }
+            });
+        }
         const resetBtn = document.getElementById('resetExamDateBtn');
         if (resetBtn) {
             resetBtn.addEventListener('click', resetExamDate);
@@ -662,7 +646,7 @@
     initDatePicker();
     updateDatePickerValue();
 
-    // ================= 任务管理 =================
+    // ================= 任务管理 (无默认任务) =================
     const STORAGE_KEY = '11408_liquid_tasks';
     let tasks = [];
     let currentFilter = 'all';
@@ -858,7 +842,7 @@
         return str.replace(/[&<>]/g, m => { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]; });
     }
 
-    // Tab 切换
+    // Tab 切换 (保持界面统一)
     function initTabs() {
         const tabBtns = document.querySelectorAll('.tab-btn');
         const todoPane = document.getElementById('todoPane');
@@ -912,7 +896,7 @@
         bgImg.classList.add('loaded');
     }
 
-    // ================= DeepSeek AI =================
+    // ================= DeepSeek AI (读取已完成任务) =================
     let lastAiTasks = [];
     async function callDeepSeek(prompt, key, completedContext) {
         const systemMsg = `你是考研规划专家，严格格式：【科目】任务内容，科目必须是数学/408/英语/政治/其他。不要多余解释。
@@ -992,6 +976,7 @@
         }
     }
 
+    // 事件绑定
     document.getElementById('generatePlanBtn').addEventListener('click', () => {
         const p = document.getElementById('aiPrompt').value.trim();
         if (p) generatePlanWithAI(p);
@@ -1019,6 +1004,7 @@
         });
     }
 
+    // 初始化所有模块
     loadTasks();
     renderAll();
     setupFilters();
