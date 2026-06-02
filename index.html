@@ -18,7 +18,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
+            padding: 1rem;
         }
 
         /* 背景图层 */
@@ -98,7 +98,7 @@
             text-align: center;
         }
         .days-number {
-            font-size: 3.3rem;
+            font-size: 3rem;
             font-weight: 800;
             background: linear-gradient(135deg, #FFFFFF, #9adc4a);
             -webkit-background-clip: text;
@@ -106,7 +106,7 @@
             color: transparent;
         }
         .countdown-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
@@ -175,51 +175,52 @@
 
         /* 圆环 */
         .nested-ring-container { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-        canvas#activityRings { width: 200px; height: 200px; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3)); }
-        .ring-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-        .legend-item { background: rgba(0,0,0,0.4); backdrop-filter: blur(12px); padding: 0.2rem 0.8rem; border-radius: 40px; font-size: 0.7rem; display: flex; align-items: center; gap: 8px; }
-        .legend-color { width: 14px; height: 14px; border-radius: 4px; }
-        .progress-note { font-size: 0.7rem; text-align: center; color: rgba(255,255,255,0.7); margin-top: 0.75rem; border-top: 0.5px solid rgba(255,255,255,0.2); padding-top: 0.75rem; }
+        canvas#activityRings { width: 180px; height: 180px; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3)); }
+        .ring-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+        .legend-item { background: rgba(0,0,0,0.4); backdrop-filter: blur(12px); padding: 0.2rem 0.6rem; border-radius: 40px; font-size: 0.65rem; display: flex; align-items: center; gap: 6px; }
+        .legend-color { width: 10px; height: 10px; border-radius: 3px; }
+        .progress-note { font-size: 0.65rem; text-align: center; color: rgba(255,255,255,0.7); margin-top: 0.75rem; border-top: 0.5px solid rgba(255,255,255,0.2); padding-top: 0.75rem; }
 
         /* AI 区域 */
-        .api-input-group { background: rgba(12,16,22,0.6); backdrop-filter: blur(12px); border-radius: 44px; padding: 0.5rem 1.2rem; display: flex; gap: 10px; margin-bottom: 1rem; border: 0.5px solid rgba(116,179,38,0.3); }
-        .api-input-group input { background: transparent; border: none; flex: 1; color: white; font-size: 0.8rem; outline: none; }
-        textarea { width: 100%; background: rgba(12,16,22,0.6); backdrop-filter: blur(8px); border: 0.5px solid rgba(255,255,255,0.15); border-radius: 24px; padding: 12px; color: white; font-family: 'Inter', monospace; font-size: 0.85rem; resize: vertical; outline: none; }
-        .ai-buttons { display: flex; gap: 12px; margin-top: 1rem; flex-wrap: wrap; }
-        .ai-btn { background: rgba(36,42,52,0.7); backdrop-filter: blur(12px); border: 0.5px solid rgba(255,255,255,0.15); padding: 8px 18px; border-radius: 44px; font-size: 0.75rem; color: #eff3f8; cursor: pointer; transition: 0.2s; }
+        .api-input-group { background: rgba(12,16,22,0.6); backdrop-filter: blur(12px); border-radius: 44px; padding: 0.5rem 1rem; display: flex; gap: 8px; margin-bottom: 1rem; border: 0.5px solid rgba(116,179,38,0.3); }
+        .api-input-group input { background: transparent; border: none; flex: 1; color: white; font-size: 0.75rem; outline: none; }
+        textarea { width: 100%; background: rgba(12,16,22,0.6); backdrop-filter: blur(8px); border: 0.5px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 10px; color: white; font-family: 'Inter', monospace; font-size: 0.8rem; resize: vertical; outline: none; }
+        .ai-buttons { display: flex; gap: 10px; margin-top: 1rem; flex-wrap: wrap; justify-content: center; }
+        .ai-btn { background: rgba(36,42,52,0.7); backdrop-filter: blur(12px); border: 0.5px solid rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 44px; font-size: 0.7rem; color: #eff3f8; cursor: pointer; transition: 0.2s; }
         .ai-btn.primary { background: #9adc4a; color: #0a0c12; border: none; }
         .ai-btn:hover { transform: scale(0.96); }
-        .ai-response { margin-top: 1rem; background: rgba(10,14,20,0.7); backdrop-filter: blur(24px); border-radius: 24px; padding: 0.9rem; border: 0.5px solid rgba(116,179,38,0.3); font-size: 0.8rem; max-height: 200px; overflow-y: auto; }
-        .response-header { display: flex; justify-content: space-between; margin-bottom: 8px; color: #9adc4a; font-size: 0.7rem; }
-        .add-suggestions-btn { background: rgba(154,220,74,0.2); border: 0.5px solid #9adc4a; border-radius: 40px; color: #bef264; padding: 4px 12px; cursor: pointer; }
+        .ai-response { margin-top: 1rem; background: rgba(10,14,20,0.7); backdrop-filter: blur(24px); border-radius: 20px; padding: 0.8rem; border: 0.5px solid rgba(116,179,38,0.3); font-size: 0.75rem; max-height: 200px; overflow-y: auto; }
+        .response-header { display: flex; justify-content: space-between; margin-bottom: 8px; color: #9adc4a; font-size: 0.65rem; flex-wrap: wrap; gap: 8px; }
+        .add-suggestions-btn { background: rgba(154,220,74,0.2); border: 0.5px solid #9adc4a; border-radius: 40px; color: #bef264; padding: 2px 10px; cursor: pointer; font-size: 0.7rem; }
 
         /* 科目筛选 */
-        .subject-filter-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1rem; }
-        .filter-chip { background: rgba(25,30,40,0.6); backdrop-filter: blur(8px); border: 0.5px solid rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 40px; font-size: 0.75rem; color: #e0e7ff; cursor: pointer; }
-        .filter-chip.active { background: #9adc4a; color: #000; }
+        .subject-filter-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; justify-content: center; }
+        .filter-chip { background: rgba(25,30,40,0.6); backdrop-filter: blur(8px); border: 0.5px solid rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 40px; font-size: 0.7rem; color: #e0e7ff; cursor: pointer; }
 
-        /* ========= 待办与进度管理 Tab (修正居中对齐) ========= */
+        /* ========= 待办与进度管理 Tab - 手机完美居中 ========= */
         .tab-bar {
             display: flex;
-            justify-content: center;  /* 关键：水平居中 */
-            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
             margin-bottom: 1.5rem;
-            border-bottom: 0.5px solid rgba(255,255,255,0.2);
             padding-bottom: 0.5rem;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
         .tab-btn {
             background: rgba(25,30,40,0.5);
             backdrop-filter: blur(8px);
             border: 0.5px solid rgba(255,255,255,0.1);
-            padding: 0.6rem 1.5rem;
-            font-size: 0.9rem;
+            padding: 8px 0;
+            font-size: 0.8rem;
             font-weight: 500;
             color: #e0e7ff;
             cursor: pointer;
             transition: 0.2s;
             border-radius: 2rem;
-            min-width: 130px;
+            flex: 1;
+            text-align: center;
+            min-width: unset;
         }
         .tab-btn.active {
             background: #9adc4a;
@@ -228,7 +229,6 @@
         }
         .tab-btn:hover:not(.active) {
             background: rgba(154, 220, 74, 0.3);
-            color: #fff;
         }
         .tab-pane { display: none; }
         .tab-pane.active-pane { display: block; }
@@ -237,33 +237,33 @@
         .add-task-area {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 2rem;
+            gap: 8px;
+            margin-bottom: 1.5rem;
             background: rgba(12,16,22,0.5);
             backdrop-filter: blur(16px);
-            padding: 0.8rem 1rem;
+            padding: 0.8rem;
             border-radius: 60px;
             border: 0.5px solid rgba(255,255,255,0.1);
             justify-content: center;
             align-items: center;
         }
         .add-task-area input {
-            flex: 2;
-            min-width: 160px;
+            flex: 1;
+            min-width: 120px;
             background: rgba(0,0,0,0.3);
             border: 0.5px solid rgba(255,255,255,0.15);
-            padding: 12px 20px;
+            padding: 10px 16px;
             border-radius: 60px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: white;
             outline: none;
         }
         .add-task-area select {
             background: rgba(0,0,0,0.3);
             border: 0.5px solid rgba(255,255,255,0.15);
-            padding: 12px 20px;
+            padding: 10px 16px;
             border-radius: 60px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: white;
             outline: none;
             cursor: pointer;
@@ -271,14 +271,14 @@
         .add-btn {
             background: #9adc4a;
             border: none;
-            padding: 12px 28px;
+            padding: 10px 20px;
             border-radius: 60px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #0a0e14;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             cursor: pointer;
             white-space: nowrap;
         }
@@ -287,36 +287,39 @@
         .tasks-list, .completed-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            max-height: 55vh;
+            gap: 10px;
+            max-height: 50vh;
             overflow-y: auto;
         }
         .task-item, .completed-item {
             background: rgba(22,26,34,0.6);
             backdrop-filter: blur(12px);
-            border-radius: 28px;
-            padding: 0.9rem 1.2rem;
+            border-radius: 24px;
+            padding: 0.7rem 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border: 0.5px solid rgba(255,255,255,0.1);
+            gap: 8px;
         }
         .task-left {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
             flex: 1;
             flex-wrap: wrap;
         }
         .task-check {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             accent-color: #9adc4a;
             cursor: pointer;
+            flex-shrink: 0;
         }
         .task-text, .completed-text {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 500;
+            word-break: break-word;
         }
         .completed-text {
             color: #9aaebf;
@@ -324,21 +327,23 @@
         }
         .subject-badge {
             background: rgba(0,0,0,0.5);
-            padding: 4px 12px;
+            padding: 2px 8px;
             border-radius: 30px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
+            flex-shrink: 0;
         }
         .delete-btn, .restore-btn {
             background: rgba(255,80,80,0.15);
             border: none;
-            padding: 6px 12px;
+            padding: 4px 10px;
             border-radius: 40px;
             color: #ffabab;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             display: flex;
             align-items: center;
             gap: 4px;
+            flex-shrink: 0;
         }
         .restore-btn {
             background: rgba(154, 220, 74, 0.2);
@@ -346,57 +351,73 @@
         }
         .empty-msg {
             text-align: center;
-            padding: 3rem;
+            padding: 2rem;
             color: #aab5cc;
+            font-size: 0.8rem;
         }
         .action-buttons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
         .sec-btn {
             background: rgba(30,36,44,0.7);
             backdrop-filter: blur(8px);
             border: 0.5px solid rgba(255,255,255,0.1);
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 44px;
             color: #f0f0f0;
             cursor: pointer;
+            font-size: 0.7rem;
         }
         .dashboard {
             max-width: 1400px;
             width: 100%;
             margin: 0 auto;
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             flex-wrap: wrap;
         }
         .left-panel {
             flex: 1;
-            min-width: 320px;
+            min-width: 280px;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
         .right-panel {
             flex: 2;
-            min-width: 400px;
+            min-width: 300px;
         }
         .loading-spinner {
             display: inline-block;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             border: 2px solid #9adc4a;
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        @media (max-width: 900px) {
-            body { padding: 1rem; }
-            .dashboard { flex-direction: column; }
-            .left-panel, .right-panel { width: 100%; }
-            .add-task-area input { flex: 1; min-width: 120px; }
-            .tab-btn { min-width: 100px; padding: 0.4rem 1rem; }
+        
+        /* 手机端优化 */
+        @media (max-width: 768px) {
+            body { padding: 0.8rem; }
+            .dashboard { gap: 1rem; }
+            .left-panel, .right-panel { min-width: 100%; }
+            .glass-card .liquidGlass-text { padding: 1rem; }
+            .todo-main-wrapper .liquidGlass-text > div { padding: 1rem !important; }
+            .days-number { font-size: 2.5rem; }
+            .tab-btn { font-size: 0.75rem; }
+            .add-task-area input { min-width: 100px; }
+            .ai-buttons { justify-content: center; }
+        }
+        
+        @media (max-width: 480px) {
+            .tab-bar { gap: 8px; }
+            .tab-btn { font-size: 0.7rem; padding: 6px 0; }
+            .add-task-area { flex-direction: column; border-radius: 28px; }
+            .add-task-area input, .add-task-area select, .add-btn { width: 100%; justify-content: center; }
+            .task-left { flex-wrap: wrap; }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -429,13 +450,13 @@
 
 <div class="dashboard">
     <div class="left-panel">
-        <!-- 倒计时卡片（含自定义考试时间） -->
+        <!-- 倒计时卡片 -->
         <div class="liquidGlass-wrapper glass-card">
             <div class="liquidGlass-effect"></div>
             <div class="liquidGlass-tint"></div>
             <div class="liquidGlass-shine"></div>
             <div class="liquidGlass-text" style="text-align: center;">
-                <i class="fas fa-hourglass-half" style="font-size: 2rem; color: #9adc4a;"></i>
+                <i class="fas fa-hourglass-half" style="font-size: 1.8rem; color: #9adc4a;"></i>
                 <div class="days-number" id="countdownDays">--</div>
                 <div class="countdown-label" id="countdownLabel">距离考研初试</div>
                 <div class="date-picker-area">
@@ -443,7 +464,7 @@
                         <label><i class="fas fa-calendar-alt"></i> 考试日期：</label>
                         <input type="date" id="examDatePicker">
                     </div>
-                    <button id="resetExamDateBtn" class="reset-date-btn"><i class="fas fa-undo-alt"></i> 重置为默认日期</button>
+                    <button id="resetExamDateBtn" class="reset-date-btn"><i class="fas fa-undo-alt"></i> 重置默认</button>
                 </div>
                 <div class="upload-area">
                     <label class="upload-label" id="uploadLabel"><i class="fas fa-image"></i> 上传背景</label>
@@ -459,12 +480,12 @@
             <div class="liquidGlass-tint"></div>
             <div class="liquidGlass-shine"></div>
             <div class="liquidGlass-text">
-                <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-simple"></i> 各科完成圆环</h4>
+                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem;"><i class="fas fa-chart-simple"></i> 各科完成圆环</h4>
                 <div class="nested-ring-container">
-                    <canvas id="activityRings" width="200" height="200"></canvas>
+                    <canvas id="activityRings" width="180" height="180"></canvas>
                     <div class="ring-legend" id="ringLegend"></div>
                 </div>
-                <div class="progress-note"><i class="fas fa-rotate-right"></i> 勾选任务 · 圆环实时更新</div>
+                <div class="progress-note"><i class="fas fa-rotate-right"></i> 勾选任务 · 圆环更新</div>
             </div>
         </div>
 
@@ -474,18 +495,18 @@
             <div class="liquidGlass-tint"></div>
             <div class="liquidGlass-shine"></div>
             <div class="liquidGlass-text">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
-                    <i class="fas fa-robot"></i> <span style="font-weight: 600;">DeepSeek 考研规划师</span>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
+                    <i class="fas fa-robot"></i> <span style="font-weight: 600;">DeepSeek 规划师</span>
                 </div>
-                <div class="api-input-group"><i class="fas fa-key"></i><input type="password" id="deepseekApiKey" placeholder="DeepSeek API Key (sk-...)"></div>
-                <textarea id="aiPrompt" rows="2" placeholder="例如：安排本周数学+408详细计划..."></textarea>
+                <div class="api-input-group"><i class="fas fa-key"></i><input type="password" id="deepseekApiKey" placeholder="DeepSeek API Key"></div>
+                <textarea id="aiPrompt" rows="2" placeholder="例如：安排本周数学+408计划"></textarea>
                 <div class="ai-buttons">
-                    <button id="generatePlanBtn" class="ai-btn primary"><i class="fas fa-magic"></i> 生成计划</button>
-                    <button id="quickDailyPlan" class="ai-btn"><i class="far fa-calendar-alt"></i> 今日待办</button>
+                    <button id="generatePlanBtn" class="ai-btn primary"><i class="fas fa-magic"></i> 生成</button>
+                    <button id="quickDailyPlan" class="ai-btn"><i class="far fa-calendar-alt"></i> 今日</button>
                     <button id="quick408Plan" class="ai-btn"><i class="fas fa-database"></i> 408冲刺</button>
                 </div>
                 <div id="aiResponseArea" class="ai-response" style="display: none;">
-                    <div class="response-header"><span><i class="fas fa-comment-dots"></i> AI 建议</span><button id="addAllAiTasks" class="add-suggestions-btn">+ 添加至待办</button></div>
+                    <div class="response-header"><span><i class="fas fa-comment-dots"></i> AI 建议</span><button id="addAllAiTasks" class="add-suggestions-btn">+ 全部添加</button></div>
                     <div id="aiResponseText"></div>
                 </div>
             </div>
@@ -497,14 +518,14 @@
             <div class="liquidGlass-tint"></div>
             <div class="liquidGlass-shine"></div>
             <div class="liquidGlass-text">
-                <h4><i class="fas fa-filter"></i> 科目筛选</h4>
+                <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-filter"></i> 科目筛选</h4>
                 <div class="subject-filter-buttons" id="filterContainer">
-                    <button class="filter-chip active" data-filter="all">📚 全部</button>
-                    <button class="filter-chip" data-filter="政治">📖 政治</button>
-                    <button class="filter-chip" data-filter="英语">🇬🇧 英语</button>
-                    <button class="filter-chip" data-filter="数学">📐 数学</button>
-                    <button class="filter-chip" data-filter="408">💻 408</button>
-                    <button class="filter-chip" data-filter="其他">⭐ 其他</button>
+                    <button class="filter-chip active" data-filter="all">全部</button>
+                    <button class="filter-chip" data-filter="政治">政治</button>
+                    <button class="filter-chip" data-filter="英语">英语</button>
+                    <button class="filter-chip" data-filter="数学">数学</button>
+                    <button class="filter-chip" data-filter="408">408</button>
+                    <button class="filter-chip" data-filter="其他">其他</button>
                 </div>
             </div>
         </div>
@@ -516,16 +537,16 @@
             <div class="liquidGlass-tint"></div>
             <div class="liquidGlass-shine"></div>
             <div class="liquidGlass-text">
-                <div style="padding: 1.8rem 2rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-                        <div style="font-size: 1.8rem; font-weight: 600;"><i class="fas fa-list-check"></i> 任务管理</div>
+                <div style="padding: 1.2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <div style="font-size: 1.3rem; font-weight: 600;"><i class="fas fa-list-check"></i> 任务管理</div>
                         <div><button class="sec-btn" id="clearCompletedBtn"><i class="fas fa-eraser"></i> 清空已完成</button></div>
                     </div>
 
-                    <!-- Tab 切换栏 - 现已居中对齐 -->
+                    <!-- Tab 切换栏 - 手机完美居中 -->
                     <div class="tab-bar">
                         <button class="tab-btn active" data-tab="todo">📋 待办清单</button>
-                        <button class="tab-btn" data-tab="progress">📊 进度管理 (已完成)</button>
+                        <button class="tab-btn" data-tab="progress">📊 进度管理</button>
                     </div>
 
                     <!-- 待办清单面板 -->
@@ -544,12 +565,12 @@
                         <div class="tasks-list" id="tasksListContainer"></div>
                     </div>
 
-                    <!-- 进度管理面板 (已完成任务) -->
+                    <!-- 进度管理面板 -->
                     <div id="progressPane" class="tab-pane">
                         <div class="completed-list" id="completedListContainer"></div>
                     </div>
 
-                    <div style="margin-top: 1rem; font-size: 0.7rem; text-align: right; color: rgba(255,255,255,0.6);"><i class="fas fa-database"></i> 本地存储 · 圆环自动跟随</div>
+                    <div style="margin-top: 0.8rem; font-size: 0.65rem; text-align: right; color: rgba(255,255,255,0.5);"><i class="fas fa-database"></i> 本地存储 · 圆环自动更新</div>
                 </div>
             </div>
         </div>
@@ -646,7 +667,7 @@
     initDatePicker();
     updateDatePickerValue();
 
-    // ================= 任务管理 (无默认任务) =================
+    // ================= 任务管理 =================
     const STORAGE_KEY = '11408_liquid_tasks';
     let tasks = [];
     let currentFilter = 'all';
@@ -691,13 +712,8 @@
         renderAll();
     }
 
-    function getCompletedTasks() {
-        return tasks.filter(t => t.completed);
-    }
-
-    function getActiveTasks() {
-        return tasks.filter(t => !t.completed);
-    }
+    function getCompletedTasks() { return tasks.filter(t => t.completed); }
+    function getActiveTasks() { return tasks.filter(t => !t.completed); }
 
     function getSubjectStats() {
         const subs = ['政治', '英语', '数学', '408', '其他'];
@@ -713,16 +729,16 @@
 
     const order = ['政治', '英语', '数学', '408', '其他'];
     const colors = { '政治': '#FF4D4D', '英语': '#4CAF50', '数学': '#2196F3', '408': '#FF9800', '其他': '#AA00FF' };
-    const radii = [84, 72, 60, 48, 36];
-    const lineWidth = 10;
+    const radii = [74, 62, 50, 38, 26];
+    const lineWidth = 9;
 
     function drawNestedRings() {
         const canvas = document.getElementById('activityRings');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        canvas.width = canvas.height = 200;
-        const cx = 100, cy = 100;
-        ctx.clearRect(0, 0, 200, 200);
+        canvas.width = canvas.height = 180;
+        const cx = 90, cy = 90;
+        ctx.clearRect(0, 0, 180, 180);
         const stats = getSubjectStats();
         for (let i = 0; i < order.length; i++) {
             const sub = order[i];
@@ -747,14 +763,14 @@
         const total = tasks.length;
         const completedCount = tasks.filter(t => t.completed).length;
         const totalPct = total === 0 ? 0 : Math.round((completedCount / total) * 100);
-        ctx.font = 'bold 20px "Inter"';
+        ctx.font = 'bold 18px "Inter"';
         ctx.fillStyle = 'rgba(255,255,255,0.95)';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(`${totalPct}%`, cx, cy);
-        ctx.font = '10px "Inter"';
+        ctx.font = '9px "Inter"';
         ctx.fillStyle = '#9adc4a';
-        ctx.fillText('总进度', cx, cy + 20);
+        ctx.fillText('总进度', cx, cy + 18);
         
         const legendDiv = document.getElementById('ringLegend');
         if (legendDiv) {
@@ -766,17 +782,16 @@
         let filtered = currentFilter === 'all' ? getActiveTasks() : getActiveTasks().filter(t => t.subject === currentFilter);
         const container = document.getElementById('tasksListContainer');
         if (!filtered.length) {
-            container.innerHTML = '<div class="empty-msg"><i class="fas fa-check-circle"></i> 暂无待办任务，添加或AI规划吧 ✨</div>';
+            container.innerHTML = '<div class="empty-msg"><i class="fas fa-check-circle"></i> 暂无待办任务，添加或AI规划</div>';
             return;
         }
         let html = '';
         filtered.forEach(task => {
-            const cls = { '政治':'subject-政治','英语':'subject-英语','数学':'subject-数学','408':'subject-408' }[task.subject] || 'subject-其他';
             html += `<div class="task-item" data-id="${task.id}">
                         <div class="task-left">
                             <input type="checkbox" class="task-check" data-id="${task.id}">
                             <span class="task-text">${escapeHtml(task.text)}</span>
-                            <span class="subject-badge ${cls}">${task.subject}</span>
+                            <span class="subject-badge">${task.subject}</span>
                         </div>
                         <button class="delete-btn" data-id="${task.id}"><i class="fas fa-trash-alt"></i> 删除</button>
                     </div>`;
@@ -794,7 +809,7 @@
         const completedTasks = getCompletedTasks();
         const container = document.getElementById('completedListContainer');
         if (!completedTasks.length) {
-            container.innerHTML = '<div class="empty-msg"><i class="fas fa-history"></i> 暂无已完成任务，完成任务后会显示在这里</div>';
+            container.innerHTML = '<div class="empty-msg"><i class="fas fa-history"></i> 暂无已完成任务</div>';
             return;
         }
         let html = '';
@@ -842,7 +857,7 @@
         return str.replace(/[&<>]/g, m => { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]; });
     }
 
-    // Tab 切换 (保持界面统一)
+    // Tab 切换
     function initTabs() {
         const tabBtns = document.querySelectorAll('.tab-btn');
         const todoPane = document.getElementById('todoPane');
@@ -865,7 +880,7 @@
         });
     }
 
-    // ================= 背景图片上传 =================
+    // 背景图片上传
     const bgImg = document.getElementById('userBgImg');
     const uploadInput = document.getElementById('bgUpload');
     const resetBgBtn = document.getElementById('resetBgBtn');
@@ -896,7 +911,7 @@
         bgImg.classList.add('loaded');
     }
 
-    // ================= DeepSeek AI (读取已完成任务) =================
+    // DeepSeek AI
     let lastAiTasks = [];
     async function callDeepSeek(prompt, key, completedContext) {
         const systemMsg = `你是考研规划专家，严格格式：【科目】任务内容，科目必须是数学/408/英语/政治/其他。不要多余解释。
@@ -942,7 +957,7 @@
 
     async function generatePlanWithAI(promptText) {
         const key = document.getElementById('deepseekApiKey').value.trim();
-        if (!key) { alert('请填入 DeepSeek API Key (platform.deepseek.com)'); return; }
+        if (!key) { alert('请填入 DeepSeek API Key'); return; }
         const completedTasks = getCompletedTasks();
         let completedContext = "无";
         if (completedTasks.length > 0) {
@@ -950,7 +965,7 @@
         }
         const respDiv = document.getElementById('aiResponseArea'), respText = document.getElementById('aiResponseText'), addBtn = document.getElementById('addAllAiTasks');
         respDiv.style.display = 'block';
-        respText.innerHTML = '<span class="loading-spinner"></span> AI 正在根据你的完成进度生成计划...';
+        respText.innerHTML = '<span class="loading-spinner"></span> AI 生成中...';
         addBtn.style.display = 'none';
         try {
             const aiOut = await callDeepSeek(promptText, key, completedContext);
@@ -964,11 +979,11 @@
                     for (let t of parsed) {
                         if (addTaskRaw(t.text, t.subject)) added++;
                     }
-                    alert(`✅ 已添加 ${added} 个AI任务到待办清单`);
+                    alert(`✅ 已添加 ${added} 个AI任务`);
                     addBtn.style.display = 'none';
                 };
             } else {
-                respText.innerHTML += '\n⚠️ 未识别标准格式，可手动添加。';
+                respText.innerHTML += '\n⚠️ 未识别标准格式';
             }
         } catch (e) {
             console.error(e);
@@ -980,10 +995,10 @@
     document.getElementById('generatePlanBtn').addEventListener('click', () => {
         const p = document.getElementById('aiPrompt').value.trim();
         if (p) generatePlanWithAI(p);
-        else alert('请输入规划需求');
+        else alert('请输入需求');
     });
-    document.getElementById('quickDailyPlan').addEventListener('click', () => generatePlanWithAI('为我生成今天考研待办：数学+408，共4-6个，使用【科目】格式'));
-    document.getElementById('quick408Plan').addEventListener('click', () => generatePlanWithAI('制定408专业课冲刺计划（数据结构、计组、操作系统、计网），输出5个核心任务，用【408】开头。'));
+    document.getElementById('quickDailyPlan').addEventListener('click', () => generatePlanWithAI('为我生成今天考研待办，使用【科目】格式'));
+    document.getElementById('quick408Plan').addEventListener('click', () => generatePlanWithAI('制定408专业课冲刺计划，输出5个核心任务，用【408】开头。'));
     document.getElementById('addTaskBtn').addEventListener('click', () => {
         const inp = document.getElementById('taskInput');
         const subj = document.getElementById('subjectSelect').value;
@@ -1004,7 +1019,7 @@
         });
     }
 
-    // 初始化所有模块
+    // 初始化
     loadTasks();
     renderAll();
     setupFilters();
