@@ -198,13 +198,29 @@
         .filter-chip { background: rgba(25,30,40,0.6); backdrop-filter: blur(8px); border: 0.5px solid rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 40px; font-size: 0.75rem; color: #e0e7ff; cursor: pointer; }
         .filter-chip.active { background: #9adc4a; color: #000; }
 
-        /* 待办与进度管理 Tab */
+        /* 待办与进度管理 Tab - 修正对齐版 */
+        .tasks-header {
+            margin-bottom: 1rem;
+        }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .title-area {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
         .tab-bar {
             display: flex;
             gap: 0.8rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 0.5px solid rgba(255,255,255,0.2);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.2);
             padding-bottom: 0.5rem;
+            margin-top: 0;
+            width: 100%;
         }
         .tab-btn {
             background: transparent;
@@ -376,6 +392,11 @@
             flex: 2;
             min-width: 400px;
         }
+        .right-panel .liquidGlass-text > div {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
         .loading-spinner {
             display: inline-block;
             width: 14px;
@@ -510,16 +531,18 @@
             <div class="liquidGlass-tint"></div>
             <div class="liquidGlass-shine"></div>
             <div class="liquidGlass-text">
-                <div style="padding: 1.8rem 2rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-                        <div style="font-size: 1.8rem; font-weight: 600;"><i class="fas fa-list-check"></i> 任务管理</div>
-                        <div><button class="sec-btn" id="clearCompletedBtn"><i class="fas fa-eraser"></i> 清空已完成</button></div>
-                    </div>
-
-                    <!-- Tab 切换栏 -->
-                    <div class="tab-bar">
-                        <button class="tab-btn active" data-tab="todo">📋 待办清单</button>
-                        <button class="tab-btn" data-tab="progress">📊 进度管理 (已完成)</button>
+                <div style="padding: 1.8rem 2rem; display: flex; flex-direction: column; height: 100%;">
+                    <!-- 头部 + Tab 栏合并区域（修正对齐） -->
+                    <div class="tasks-header">
+                        <div class="header-row">
+                            <div class="title-area"><i class="fas fa-list-check"></i> 任务管理</div>
+                            <div><button class="sec-btn" id="clearCompletedBtn"><i class="fas fa-eraser"></i> 清空已完成</button></div>
+                        </div>
+                        <!-- Tab 切换栏 -->
+                        <div class="tab-bar">
+                            <button class="tab-btn active" data-tab="todo">📋 待办清单</button>
+                            <button class="tab-btn" data-tab="progress">📊 进度管理 (已完成)</button>
+                        </div>
                     </div>
 
                     <!-- 待办清单面板 -->
@@ -553,20 +576,18 @@
 <script>
     // ================= 考试时间自定义功能 =================
     const EXAM_DATE_STORAGE_KEY = 'customExamDate';
-    let examDateObj = null;   // 存储用户选择的日期（Date 对象，精确到当天 00:00:00）
+    let examDateObj = null;
     
-    // 获取默认考试日期（当年12月第三个周六附近，取 12月20日作为标准默认值）
     function getDefaultExamDate() {
         const now = new Date();
         let year = now.getFullYear();
-        let defaultDate = new Date(year, 11, 20); // 12月20日
+        let defaultDate = new Date(year, 11, 20);
         if (now > defaultDate) {
             defaultDate = new Date(year + 1, 11, 20);
         }
         return defaultDate;
     }
     
-    // 加载保存的考试日期
     function loadExamDate() {
         const stored = localStorage.getItem(EXAM_DATE_STORAGE_KEY);
         if (stored) {
@@ -579,12 +600,10 @@
         examDateObj = getDefaultExamDate();
     }
     
-    // 保存考试日期到 localStorage
     function saveExamDate(date) {
         localStorage.setItem(EXAM_DATE_STORAGE_KEY, date.toISOString().split('T')[0]);
     }
     
-    // 更新日期选择器的显示值
     function updateDatePickerValue() {
         const picker = document.getElementById('examDatePicker');
         if (picker && examDateObj) {
@@ -595,23 +614,19 @@
         }
     }
     
-    // 倒计时更新函数
     function updateCountdown() {
         if (!examDateObj) return;
         const now = new Date();
-        // 清除时间部分，只比较日期
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const examDay = new Date(examDateObj.getFullYear(), examDateObj.getMonth(), examDateObj.getDate());
         const diffTime = examDay - today;
         const daysRemaining = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
         const daysSpan = document.getElementById('countdownDays');
         if (daysSpan) daysSpan.innerText = daysRemaining;
-        // 可选的标签提示
         const labelSpan = document.getElementById('countdownLabel');
         if (labelSpan) labelSpan.innerText = `距离 ${examDay.getFullYear()}年${examDay.getMonth()+1}月${examDay.getDate()}日 考研`;
     }
     
-    // 设置新的考试日期 (由用户选择)
     function setExamDate(newDate) {
         examDateObj = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate());
         saveExamDate(examDateObj);
@@ -619,7 +634,6 @@
         updateCountdown();
     }
     
-    // 重置为默认日期
     function resetExamDate() {
         examDateObj = getDefaultExamDate();
         saveExamDate(examDateObj);
@@ -627,7 +641,6 @@
         updateCountdown();
     }
     
-    // 监听日期选择器变化
     function initDatePicker() {
         const picker = document.getElementById('examDatePicker');
         if (!picker) return;
@@ -643,14 +656,13 @@
         }
     }
     
-    // ================= 倒计时定时器 =================
     loadExamDate();
     updateCountdown();
-    setInterval(updateCountdown, 1000 * 60 * 60); // 每小时更新一次，足够精确
+    setInterval(updateCountdown, 1000 * 60 * 60);
     initDatePicker();
     updateDatePickerValue();
 
-    // ================= 任务管理 (无默认任务) =================
+    // ================= 任务管理 =================
     const STORAGE_KEY = '11408_liquid_tasks';
     let tasks = [];
     let currentFilter = 'all';
@@ -900,7 +912,7 @@
         bgImg.classList.add('loaded');
     }
 
-    // ================= DeepSeek AI (读取已完成任务) =================
+    // ================= DeepSeek AI =================
     let lastAiTasks = [];
     async function callDeepSeek(prompt, key, completedContext) {
         const systemMsg = `你是考研规划专家，严格格式：【科目】任务内容，科目必须是数学/408/英语/政治/其他。不要多余解释。
@@ -980,7 +992,6 @@
         }
     }
 
-    // 事件绑定
     document.getElementById('generatePlanBtn').addEventListener('click', () => {
         const p = document.getElementById('aiPrompt').value.trim();
         if (p) generatePlanWithAI(p);
@@ -1008,7 +1019,6 @@
         });
     }
 
-    // 初始化所有模块
     loadTasks();
     renderAll();
     setupFilters();
